@@ -5,7 +5,7 @@ import 'package:todoapp/app/global_widgets/global_cart.dart';
 import 'package:todoapp/app/global_widgets/global_textfield.dart';
 import 'package:todoapp/app/views/add_edit_page/edit_page.dart';
 
-import '../../models/task_model.dart';
+import '../../domain/models/task_model.dart';
 import '../../services/task_service.dart';
 
 class SearchPage extends StatefulWidget {

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:todoapp/app/bloc/home_bloc/home_bloc.dart';
 import 'package:todoapp/app/global_widgets/global_appbar.dart';
-import 'package:todoapp/app/models/task_model.dart';
-import 'package:todoapp/app/services/task_service.dart';
+import 'package:todoapp/app/domain/models/task_model.dart';
 
 import '../../global_widgets/global_floating_button.dart';
 import '../../global_widgets/global_textfield.dart';
@@ -20,8 +20,8 @@ class EditPage extends StatefulWidget {
 }
 
 class _EditPageState extends State<EditPage> {
-  late final TaskModel? taskModel;
-  final TaskService service = GetIt.I();
+  //late final TaskModel? taskModel;
+  // final TaskService service = GetIt.I();
 
   DateTime? date;
   TimeOfDay? time;
@@ -74,19 +74,21 @@ class _EditPageState extends State<EditPage> {
                   isDone: false,
                   id: widget.task.id);
 
-              await service.update(task);
+              // await service.update(task);
+              context.read<HomeBloc>().add(TaskEditEvent(task: task));
 
               if (context.mounted) {
                 Navigator.pop(context, 'update');
               }
             } else {
-              await service.update(TaskModel(
-                  id: widget.task.id,
-                  task: taskController.text.toString(),
-                  isDone: widget.task.isDone,
-                  discription: disController.text.toString(),
-                  time: timeController.text.toString(),
-                  date: dateController.text.toString()));
+              context.read<HomeBloc>().add(TaskEditEvent(
+                  task: (TaskModel(
+                      id: widget.task.id,
+                      task: taskController.text.toString(),
+                      isDone: widget.task.isDone,
+                      discription: disController.text.toString(),
+                      time: timeController.text.toString(),
+                      date: dateController.text.toString()))));
               if (context.mounted) {
                 Navigator.pop(context, 'update');
               }

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:todoapp/app/bloc/home_bloc/home_bloc.dart';
 import 'package:todoapp/app/global_widgets/global_appbar.dart';
 import 'package:todoapp/app/global_widgets/global_floating_button.dart';
 import 'package:todoapp/app/global_widgets/global_textfield.dart';
-import 'package:todoapp/app/models/task_model.dart';
+import 'package:todoapp/app/domain/models/task_model.dart';
 import 'package:todoapp/app/services/date_picker.dart';
-import 'package:todoapp/app/services/task_service.dart';
 import 'package:todoapp/app/services/time_picker.dart';
 
 class AddPage extends StatefulWidget {
@@ -17,7 +17,7 @@ class AddPage extends StatefulWidget {
 }
 
 class _AddPageState extends State<AddPage> {
-  final TaskService service = GetIt.I();
+  // final TaskService service = GetIt.I();
 
   final taskController = TextEditingController();
   final disController = TextEditingController();
@@ -152,7 +152,9 @@ class _AddPageState extends State<AddPage> {
             TaskModel task =
                 TaskModel(task: taskController.text.toString(), isDone: false);
 
-            await service.add(task);
+            //  await service.add(task);
+
+            context.read<HomeBloc>().add(TaskAddEvent(task: task));
 
             if (context.mounted) {
               Navigator.pop(context, 'update');
@@ -165,7 +167,8 @@ class _AddPageState extends State<AddPage> {
                 time: timeController.text.toString(),
                 date: dateController.text.toString());
 
-            await service.add(task);
+            // await service.add(task);
+            context.read<HomeBloc>().add(TaskAddEvent(task: task));
 
             if (context.mounted) {
               Navigator.pop(context, 'update');

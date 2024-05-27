@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_swipe_action_cell/core/cell.dart';
-import 'package:get_it/get_it.dart';
+import 'package:todoapp/app/bloc/home_bloc/home_bloc.dart';
 import 'package:todoapp/app/global_widgets/global_appbar.dart';
 import 'package:todoapp/app/global_widgets/global_cart.dart';
 import 'package:todoapp/app/global_widgets/global_floating_button.dart';
 import 'package:todoapp/app/global_widgets/global_logo.dart';
-import 'package:todoapp/app/models/task_model.dart';
-import 'package:todoapp/app/services/task_service.dart';
+import 'package:todoapp/app/domain/models/task_model.dart';
+import 'package:todoapp/app/utils/app_extension.dart';
 import 'package:todoapp/app/views/add_edit_page/add_page.dart';
 import 'package:todoapp/app/views/add_edit_page/edit_page.dart';
 
@@ -23,8 +24,14 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final homeCotroller = TextEditingController();
 
-  final TaskService service = GetIt.I();
+  // final TaskService service = GetIt.I();
   List<TaskModel>? taskList;
+
+  @override
+  void initState() {
+    super.initState();
+    context.read<HomeBloc>().add(HomeGetAllDataEvent());
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -62,71 +69,103 @@ class _HomePageState extends State<HomePage> {
             )
           : null,
       body: Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Expanded(
-              child: FutureBuilder(
-                  future: service.getAll(),
-                  builder: (context, snapshot) {
-                    if (snapshot.hasError) {
-                      return Center(
-                          child: Text(
-                        snapshot.error.toString(),
-                        style:
-                            const TextStyle(color: Colors.black, fontSize: 25),
-                      ));
-                    } else if (snapshot.hasData) {
-                      if (snapshot.data!.isEmpty) {
-                        return _isEmptyState();
-                      }
-                      return ListView.builder(
+          padding: const EdgeInsets.all(10.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Expanded(child:
+                  BlocBuilder<HomeBloc, HomeState>(builder: (context, state) {
+                return switch (state) {
+                  HomeInitialState() =>
+                    const Center(child: CircularProgressIndicator()),
+                  ErrorState() => Center(
+                        child: Text(
+                      state.errorMessage,
+                      style: const TextStyle(color: Colors.black, fontSize: 25),
+                    )),
+                  LoadState() => state.taskList.isEmpty
+                      ? _isEmptyState()
+                      : ListView.builder(
                           shrinkWrap: true,
                           physics: const BouncingScrollPhysics(),
-                          itemCount: snapshot.data!.length,
+                          itemCount: state.taskList.length,
                           itemBuilder: (context, index) {
                             int reverseIndex =
-                                snapshot.data!.length - 1 - index;
-                            TaskModel task = snapshot.data![reverseIndex];
+                                state.taskList.length - 1 - index;
+
+                            TaskModel task = state.taskList[reverseIndex];
 
                             return _isNotEmptyState(task);
-                          });
-                    } else {
-                      return _isEmptyState();
-                    }
-                  }),
-            ),
-            Row(
-              children: [
-                Expanded(
-                    child: GlobalTextFormField(
-                        onChanged: (p0) {
-                          setState(() {});
-                        },
-                        controller: homeCotroller,
-                        hintText: 'Enter Quick Task Here',
-                        keyboardType: TextInputType.text)),
-                homeCotroller.text.isNotEmpty
-                    ? IconButton(
-                        onPressed: () {
-                          service.add(TaskModel(
-                              task: homeCotroller.text.toString(),
-                              isDone: false));
-                          homeCotroller.clear();
-                          setState(() {});
-                        },
-                        icon: Icon(
-                          Icons.check,
-                          size: 40,
-                          color: AppColor.backgroundColor.withOpacity(.9),
-                        ))
-                    : const SizedBox()
-              ],
-            ),
-          ],
-        ),
-      ),
+                          }),
+                };
+
+                //  return FutureBuilder(
+                //      future: service.getAll(),
+                //     builder: (context, snapshot) {
+                //     if (snapshot.hasError) {
+                //      return Center(
+                //          child: Text(
+                //       snapshot.error.toString(),
+                //       style: const TextStyle(
+                //           color: Colors.black, fontSize: 25),
+                //     ));
+                //   } else if (snapshot.hasData) {
+                //     if (snapshot.data!.isEmpty) {
+                //       return _isEmptyState();
+                //      }
+                //     return ListView.builder(
+                //         shrinkWrap: true,
+                //       physics: const BouncingScrollPhysics(),
+                //      itemCount: snapshot.data!.length,
+                //     itemBuilder: (context, index) {
+                //      int reverseIndex =
+                //           snapshot.data!.length - 1 - index;
+//                      TaskModel task = snapshot.data![reverseIndex];
+
+                //            return _isNotEmptyState(task);
+                //           });
+                //     } else {
+                //        return _isEmptyState();
+                //      }
+                //    });
+              })),
+              Row(
+                children: [
+                  Expanded(
+                      child: GlobalTextFormField(
+                          onChanged: (p0) {
+                            setState(() {});
+                          },
+                          controller: homeCotroller,
+                          hintText: 'Enter Quick Task Here',
+                          keyboardType: TextInputType.text)),
+                  homeCotroller.text.isNotEmpty
+                      ? IconButton(
+                          onPressed: () {
+                            //  service.add(TaskModel(
+                            TaskModel task = TaskModel(
+                                task: homeCotroller.text.toString(),
+                                isDone: false);
+                            //  isDone: false));
+                            //  context.read<HomeBloc>().add(HomeGetAllDataEvent());
+                            context
+                                .read<HomeBloc>()
+                                .add(TaskAddEvent(task: task));
+                            // context.read<HomeBloc>().add(HomeGetAllDataEvent());
+                            homeCotroller.clear();
+
+                            setState(() {});
+                          },
+                          icon: Icon(
+                            Icons.check,
+                            size: 40,
+                            color: AppColor.backgroundColor.withOpacity(.9),
+                          ))
+                      : const SizedBox()
+                ],
+              ),
+            ],
+          )),
     );
   }
 
@@ -142,35 +181,46 @@ class _HomePageState extends State<HomePage> {
             ),
             onTap: (CompletionHandler handler) async {
               await handler(true);
-              await service.delete(task);
+              //  await service.delete(task);
+              // ignore: use_build_context_synchronously
+              context.read<HomeBloc>().add(DeleteEvent(task: task));
               setState(() {});
             },
             color: AppColor.whiteColor),
       ],
       child: GlobalCart(
-          date: task.date,
-          time: task.time,
-          isDone: task.isDone,
-          title: task.task,
-          isDonebutton: () {
-            service.taskCompleted(task, !task.isDone).then(
-              (value) {
-                setState(() {});
-              },
-            );
-          },
-          onPress: () async {
-            String? update = await Navigator.push(context,
-                MaterialPageRoute(builder: (_) => EditPage(task: task)));
-            if (update == 'update' || update == null) {
-              setState(() {});
-            }
-          },
-          discription: task.discription),
+        date: task.date,
+        time: task.time,
+        isDone: task.isDone,
+        title: task.task.toTileUperCase(),
+        isDonebutton: () {
+          context
+              .read<HomeBloc>()
+              .add(IsDoneEvent(task: task, isDone: task.isDone ? false : true));
+
+          //  service.taskCompleted(task, !task.isDone).then(
+          //   (value) {
+          //
+          // },
+          //   );
+          setState(() {});
+        },
+        onPress: () async {
+          String? update = await Navigator.push(
+              context, MaterialPageRoute(builder: (_) => EditPage(task: task)));
+          if (update == 'update' || update == null) {
+            setState(() {});
+          }
+        },
+        discription: task.discription == null
+            ? task.discription
+            : task.discription!.toTileUperCase(),
+      ),
     );
   }
 
   _isEmptyState() {
+    
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
