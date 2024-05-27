@@ -1,8 +1,0 @@
- final TextEditingController taskController =
-        TextEditingController(text: widget.task.task);
-    final TextEditingController disController =
-        TextEditingController(text: widget.task.discription);
-    final TextEditingController dateController =
-        TextEditingController(text: widget.task.date);
-    final TextEditingController timeController =
-        TextEditingController(text: widget.task.time);

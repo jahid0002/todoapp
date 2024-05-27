@@ -1,4 +1,4 @@
-import 'package:todoapp/app/models/task_model.dart';
+import 'package:todoapp/app/domain/models/task_model.dart';
 import 'package:todoapp/app/services/task_service.dart';
 
 class FirebaseDatabase implements TaskService {

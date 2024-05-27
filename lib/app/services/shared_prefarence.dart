@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:todoapp/app/models/task_model.dart';
+import 'package:todoapp/app/domain/models/task_model.dart';
 import 'package:todoapp/app/services/task_service.dart';
 
 class StoreData implements TaskService {
