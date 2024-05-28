@@ -75,6 +75,9 @@ class _HomePageState extends State<HomePage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
+              SizedBox(
+                height: size.height * 0.02,
+              ),
               Expanded(child:
                   BlocBuilder<HomeBloc, HomeState>(builder: (context, state) {
                 return switch (state) {
@@ -182,7 +185,7 @@ class _HomePageState extends State<HomePage> {
             icon: Icon(
               Icons.delete,
               size: 38,
-              color: AppColor.backgroundColor,
+              color: Theme.of(context).cardColor,
             ),
             onTap: (CompletionHandler handler) async {
               await handler(true);
@@ -191,7 +194,7 @@ class _HomePageState extends State<HomePage> {
               context.read<HomeBloc>().add(DeleteEvent(task: task));
               setState(() {});
             },
-            color: AppColor.whiteColor),
+            color: Theme.of(context).hintColor),
       ],
       child: GlobalCart(
         date: task.date,
@@ -234,10 +237,17 @@ class _HomePageState extends State<HomePage> {
           height: 200,
           width: 200,
           fit: BoxFit.cover,
+          color: Theme.of(context).focusColor,
+        ),
+        const SizedBox(
+          height: 20,
         ),
         Text(
           'No Task Here',
-          style: Theme.of(context).textTheme.displayLarge,
+          style: Theme.of(context)
+              .textTheme
+              .displayLarge!
+              .copyWith(color: Theme.of(context).cardColor.withOpacity(.5)),
         ),
       ],
     );
