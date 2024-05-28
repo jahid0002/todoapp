@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:todoapp/app/utils/color.dart';
 
 class GlobalTextFormField extends StatelessWidget {
   const GlobalTextFormField({
@@ -41,8 +40,8 @@ class GlobalTextFormField extends StatelessWidget {
       validator: validator,
       style: Theme.of(context)
           .textTheme
-          .displaySmall!
-          .copyWith(color: AppColor.whiteColor),
+          .headlineLarge!
+          .copyWith(color: Theme.of(context).cardColor.withOpacity(.9)),
       controller: controller,
       decoration: InputDecoration(
         suffixIcon: icon != null
@@ -51,23 +50,25 @@ class GlobalTextFormField extends StatelessWidget {
                 child: Icon(
                   icon,
                   size: 30,
-                  color: AppColor.whiteColor,
+                  color: Theme.of(context).cardColor.withOpacity(.5),
                 ))
             : null,
         filled: true,
-        fillColor: AppColor.backgroundColor.withOpacity(.9),
+        fillColor: Theme.of(context).focusColor,
         hintStyle: Theme.of(context)
             .textTheme
             .headlineLarge!
-            .copyWith(color: AppColor.whiteColor),
+            .copyWith(color: Theme.of(context).cardColor.withOpacity(.9)),
         hintText: hintText,
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
-          borderSide: BorderSide(width: 1, color: AppColor.whiteColor),
+          borderSide: BorderSide(
+              width: 2, color: Theme.of(context).cardColor.withOpacity(.5)),
         ),
         focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),
-            borderSide: BorderSide(width: 1, color: AppColor.whiteColor)),
+            borderSide: BorderSide(
+                width: 2, color: Theme.of(context).cardColor.withOpacity(.5))),
         errorBorder: const OutlineInputBorder(),
       ),
     );

@@ -5,9 +5,9 @@ class AppColor {
   // static Color backgroundColor = const Color(0xff191D2C);
   static Color redColor = const Color(0xffEF232F);
   static Color textColor = const Color.fromARGB(255, 3, 49, 96);
-  static Color blackColor = const Color(0xff333A51);
+  static Color blackColor = Colors.black;
   static Color secondaryColor = const Color(0xff135D66);
-
+  static Color scafoldColor = const Color.fromARGB(255, 22, 22, 22);
   // static Color backgroundColor = const Color(0xff003C43);
 
   // static Color backgroundColor = const Color(0xff191D2C);

@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_swipe_action_cell/core/cell.dart';
 import 'package:todoapp/app/bloc/home_bloc/home_bloc.dart';
+import 'package:todoapp/app/bloc/settings_bloc/bloc/settings_bloc.dart';
 import 'package:todoapp/app/global_widgets/global_appbar.dart';
 import 'package:todoapp/app/global_widgets/global_cart.dart';
 import 'package:todoapp/app/global_widgets/global_floating_button.dart';
 import 'package:todoapp/app/global_widgets/global_logo.dart';
 import 'package:todoapp/app/domain/models/task_model.dart';
+import 'package:todoapp/app/routes/app_routes.dart';
 import 'package:todoapp/app/utils/app_extension.dart';
 import 'package:todoapp/app/views/add_edit_page/add_page.dart';
 import 'package:todoapp/app/views/add_edit_page/edit_page.dart';
@@ -31,6 +33,8 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     context.read<HomeBloc>().add(HomeGetAllDataEvent());
+    context.read<SettingsBloc>().add(SetTheme());
+    context.read<SettingsBloc>().add(GetTheme());
   }
 
   @override
@@ -43,31 +47,29 @@ class _HomePageState extends State<HomePage> {
         },
         title: 'All Task',
         leading: const GlobalLogo(radias: 10),
+        settingButton: () {
+          Navigator.pushNamed(context, PageName.settingPage);
+        },
       ),
-      floatingActionButton: homeCotroller.text.isEmpty
-          ? SizedBox(
-              height: size.height * 0.13,
-              width: size.height * 0.09,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  GlobalFButton(
-                    icon: Icons.add,
-                    onTap: () async {
-                      String? update = await Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const AddPage()));
-                      if (update == 'update' || update == null) {
-                        setState(() {});
-                      }
-                    },
-                  ),
-                  const SizedBox()
-                ],
-              ),
-            )
-          : null,
+      floatingActionButton: SizedBox(
+        height: size.height * 0.13,
+        width: size.height * 0.09,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            GlobalFButton(
+              icon: Icons.add,
+              onTap: () async {
+                String? update = await Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => const AddPage()));
+                if (update == 'update' || update == null) {
+                  setState(() {});
+                }
+              },
+            ),
+          ],
+        ),
+      ),
       body: Padding(
           padding: const EdgeInsets.all(10.0),
           child: Column(
@@ -78,7 +80,7 @@ class _HomePageState extends State<HomePage> {
                 return switch (state) {
                   HomeInitialState() =>
                     const Center(child: CircularProgressIndicator()),
-                  ErrorState() => Center(
+                  ErrorState _ => Center(
                         child: Text(
                       state.errorMessage,
                       style: const TextStyle(color: Colors.black, fontSize: 25),
@@ -132,13 +134,16 @@ class _HomePageState extends State<HomePage> {
               Row(
                 children: [
                   Expanded(
-                      child: GlobalTextFormField(
-                          onChanged: (p0) {
-                            setState(() {});
-                          },
-                          controller: homeCotroller,
-                          hintText: 'Enter Quick Task Here',
-                          keyboardType: TextInputType.text)),
+                      child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: GlobalTextFormField(
+                        onChanged: (p0) {
+                          setState(() {});
+                        },
+                        controller: homeCotroller,
+                        hintText: 'Enter Quick Task Here',
+                        keyboardType: TextInputType.text),
+                  )),
                   homeCotroller.text.isNotEmpty
                       ? IconButton(
                           onPressed: () {
@@ -220,7 +225,6 @@ class _HomePageState extends State<HomePage> {
   }
 
   _isEmptyState() {
-    
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,

@@ -37,5 +37,3 @@ class ServerFailure extends Failure {
     required super.code,
   }) : super(message: message ?? "A server error occurred");
 }
-
-
