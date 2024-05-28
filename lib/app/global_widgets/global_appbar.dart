@@ -9,13 +9,13 @@ class GlobalAppbar extends StatelessWidget implements PreferredSizeWidget {
       this.leading,
       this.actions,
       this.searchButton,
-      this.moreButton});
+      this.settingButton});
 
   final String? title;
   final Widget? leading;
   final List<Widget>? actions;
   final VoidCallback? searchButton;
-  final VoidCallback? moreButton;
+  final VoidCallback? settingButton;
 
   @override
   Widget build(BuildContext context) {
@@ -47,6 +47,13 @@ class GlobalAppbar extends StatelessWidget implements PreferredSizeWidget {
                 onPressed: searchButton,
                 icon: Icon(
                   Icons.search_outlined,
+                  size: 30,
+                  color: AppColor.whiteColor,
+                )),
+            IconButton(
+                onPressed: settingButton,
+                icon: Icon(
+                  Icons.settings_outlined,
                   size: 30,
                   color: AppColor.whiteColor,
                 )),

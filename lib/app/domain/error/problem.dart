@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-class Problem  {
+class Problem {
   final String type;
   final String title;
   final int status;
@@ -13,8 +13,7 @@ class Problem  {
     required this.status,
     required this.detail,
     required this.traceId,
-  }); 
-
+  });
 
   factory Problem.fromMap(Map<String, dynamic> map) {
     return Problem(
@@ -26,10 +25,5 @@ class Problem  {
     );
   }
 
-  factory Problem.fromJson(String json) => Problem.fromMap(jsonDecode(json)); 
-
-
+  factory Problem.fromJson(String json) => Problem.fromMap(jsonDecode(json));
 }
-
-
-

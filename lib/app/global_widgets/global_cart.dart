@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:todoapp/app/utils/color.dart';
 
 class GlobalCart extends StatelessWidget {
   const GlobalCart({
@@ -32,9 +31,11 @@ class GlobalCart extends StatelessWidget {
           child: Container(
             // clipBehavior: Clip.hardEdge,
             decoration: BoxDecoration(
-              color: AppColor.backgroundColor.withOpacity(.95),
-              borderRadius: BorderRadius.circular(15),
-            ),
+                color: Theme.of(context).focusColor,
+                borderRadius: BorderRadius.circular(15),
+                border: Border.all(
+                    width: 1,
+                    color: Theme.of(context).cardColor.withOpacity(.5))),
             child: Padding(
               padding: const EdgeInsets.all(10.0),
               child: Column(
@@ -47,12 +48,12 @@ class GlobalCart extends StatelessWidget {
                               ? Icon(
                                   Icons.check_outlined,
                                   size: 30,
-                                  color: AppColor.whiteColor,
+                                  color: Theme.of(context).cardColor,
                                 )
                               : Icon(
                                   Icons.radio_button_unchecked_outlined,
                                   size: 30,
-                                  color: AppColor.whiteColor,
+                                  color: Theme.of(context).cardColor,
                                 )),
                       SizedBox(
                         width: size.width * 0.02,
@@ -65,7 +66,7 @@ class GlobalCart extends StatelessWidget {
                             .copyWith(
                                 fontWeight: FontWeight.w800,
                                 fontSize: 20,
-                                color: AppColor.whiteColor,
+                                color: Theme.of(context).cardColor,
                                 decoration:
                                     isDone ? TextDecoration.lineThrough : null),
                       ),
@@ -73,7 +74,7 @@ class GlobalCart extends StatelessWidget {
                   ),
                   Row(children: [
                     SizedBox(
-                      width: size.width * 0.08,
+                      width: size.width * 0.09,
                     ),
                     Expanded(
                         flex: 3,
@@ -86,7 +87,8 @@ class GlobalCart extends StatelessWidget {
                                             .textTheme
                                             .headlineLarge!
                                             .copyWith(
-                                                color: AppColor.whiteColor))
+                                                color: Theme.of(context)
+                                                    .cardColor))
                                     : null))),
                     Expanded(
                         flex: 2,
@@ -100,7 +102,8 @@ class GlobalCart extends StatelessWidget {
                                     style: Theme.of(context)
                                         .textTheme
                                         .headlineMedium!
-                                        .copyWith(color: AppColor.whiteColor),
+                                        .copyWith(
+                                            color: Theme.of(context).cardColor),
                                   )
                                 : const SizedBox(),
                             date != null
@@ -108,7 +111,8 @@ class GlobalCart extends StatelessWidget {
                                     style: Theme.of(context)
                                         .textTheme
                                         .headlineMedium!
-                                        .copyWith(color: AppColor.whiteColor))
+                                        .copyWith(
+                                            color: Theme.of(context).cardColor))
                                 : const SizedBox()
                           ],
                         ))
